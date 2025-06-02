@@ -1,57 +1,54 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import db from "@repo/db/client";
-import { z } from "zod";
-
 const app = express();
-app.use(express.json());
 
-// Zod schema for input validation
-const inputSchema = z.object({
-    token: z.string(),
-    userId: z.string(),   // assuming `userId` comes as a string (e.g., from frontend)
-    amount: z.number()
-});
+app.use(express.json())
 
-app.post("/hdfcWebhook", async (req: Request, res: Response): Promise<void> => {
-
-    const parsed = inputSchema.safeParse(req.body);
-    if (!parsed.success) {
-        res.status(400).json({
-            error: "Invalid input",
-            details: parsed.error.errors
-        });
-        return;
-    }
-
-    const { token, userId, amount } = parsed.data;
+app.post("/hdfcWebhook", async (req, res) => {
+    //TODO: Add zod validation here?
+    //TODO: HDFC bank should ideally send us a secret so we know this is sent by them
+    const paymentInformation: {
+        token: string;
+        userId: string;
+        amount: string
+    } = {
+        token: req.body.token,
+        userId: req.body.user_identifier,
+        amount: req.body.amount
+    };
 
     try {
-      
         await db.$transaction([
             db.balance.updateMany({
-                where: { userId: Number(userId) },
+                where: {
+                    userId: Number(paymentInformation.userId)
+                },
                 data: {
-                    amount: { increment: amount }
+                    amount: {
+                        increment: Number(paymentInformation.amount)
+                    }
                 }
             }),
-          db.OnRampTransaction.updateMany({
-                where: { token },
-                data: { status: "Success" }
+            db.onRampTransaction.updateMany({
+                where: {
+                    token: paymentInformation.token
+                }, 
+                data: {
+                    status: "Success",
+                }
             })
         ]);
 
-        res.status(200).json({
-            message: "Payment processed successfully",
-            data: parsed.data
-        });
-
-    } catch (error) {
-        console.error("DB transaction failed:", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.json({
+            message: "Captured"
+        })
+    } catch(e) {
+        console.error(e);
+        res.status(411).json({
+            message: "Error while processing webhook"
+        })
     }
-});
 
-// Start server
-app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
-});
+})
+
+app.listen(3003);
