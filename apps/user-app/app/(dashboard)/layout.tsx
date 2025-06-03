@@ -1,5 +1,6 @@
 
 import  {SidebarItem} from "@repo/ui/sidebar";
+import { AppbarClient } from "../Appbarclient";
 
 export default function Layout({
   children,
@@ -7,19 +8,31 @@ export default function Layout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
+    <>
+    <div>
+      <AppbarClient />  
+    </div>
     <div className="flex ">
         <div className="w-72 border-r border-slate-300 min-h-screen mr-4 pt-28">
             <div>
-                <SidebarItem href={"/dashboard"} icon={<HomeIcon />} title="Home" />
+                <SidebarItem href={"/"} icon={<Home />} title="Home" />
+                <SidebarItem href={"/dashboard"} icon={<HomeIcon />} title="Dashboard" />
                 <SidebarItem href={"/transfer"} icon={<TransferIcon />} title="Transfer" />
                 <SidebarItem href={"/transaction"} icon={<TransactionsIcon />} title="Transactions" />
             </div>
         </div>
             {children}
     </div>
+    </>
   );
 }
+function Home()
+{
+  return<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path fillRule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
+</svg>
 
+}
 // Icons Fetched from https://heroicons.com/
 function HomeIcon() {
     return <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
