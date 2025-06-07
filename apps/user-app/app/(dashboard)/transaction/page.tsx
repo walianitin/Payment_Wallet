@@ -3,14 +3,10 @@
 import { OnRampTransactions } from "../../components/OnRampTransaction";
 import prisma from "@repo/db/client";
 
-import transfer from "../../lib/action/Transfer";
-
-
 
 
 export default async function() {
-    // Removed useState since this is a server component and useState is not valid here
- 
+   
     
     const transactions=await prisma.onRampTransaction.findMany({
         where: {
