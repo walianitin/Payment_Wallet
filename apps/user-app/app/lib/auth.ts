@@ -1,6 +1,6 @@
 import db from "@repo/db/client";
 import CredentialsProvider from "next-auth/providers/credentials"
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const authOptions = {
     providers: [
@@ -39,6 +39,12 @@ export const authOptions = {
                         password: hashedPassword
                     }
                 });
+                const balance =await db.balance.create({
+                    data: {
+                        userId: Number(user.id),
+                        amount: Number(Math.random() * 100000), // Random balance for demo purposes
+                        locked:Number(Math.random() * 100000) // Random locked balance for demo purposes
+                    }})
             
                 return {
                     id: user.id.toString(),

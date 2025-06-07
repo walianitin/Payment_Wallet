@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
      <Providers>
-        <AppbarClient />
+        {/* <AppbarClient /> */}
         <body className={inter.className}>{children}</body>
       </Providers>
     </html>
