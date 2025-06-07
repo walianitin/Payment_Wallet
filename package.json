@@ -5,11 +5,14 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}",
+    "db:generate":"cd ./packages/db && npx prisma generate"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^14.0.5",
     "prettier": "^3.2.5",
     "turbo": "latest"
   },
@@ -20,5 +23,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "bcryptjs": "^3.0.2"
+  }
 }
