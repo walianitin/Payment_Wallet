@@ -27,7 +27,7 @@ export async function onrampAction(
             }
         });
         return { success: true ,
-            message: "OnRamp transaction created successfully"
+            message: "OnRamp transaction created success"
         };
     } catch (e) {
         console.error("Error creating onRamp transaction:", e);
